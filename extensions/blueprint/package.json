@@ -1,0 +1,40 @@
+{
+  "name": "blueprint",
+  "displayName": "Blueprint Themes",
+  "description": "Thoughtfully crafted VS Code themes for modern developers.",
+  "version": "0.1.0",
+  "publisher": "xiomesh",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Themes"
+  ],
+  "keywords": [
+    "theme",
+    "color theme",
+    "dark theme",
+    "blueprint",
+    "carbon",
+    "minimal",
+    "blue"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xiomesh/vscode-themes.git",
+    "directory": "extensions/blueprint"
+  },
+  "bugs": {
+    "url": "https://github.com/xiomesh/vscode-themes/issues"
+  },
+  "homepage": "https://github.com/xiomesh/vscode-themes/tree/main/extensions/blueprint#readme",
+  "contributes": {
+    "themes": [
+      {
+        "label": "Blueprint Carbon",
+        "uiTheme": "vs-dark",
+        "path": "./themes/carbon-color-theme.json"
+      }
+    ]
+  }
+}
