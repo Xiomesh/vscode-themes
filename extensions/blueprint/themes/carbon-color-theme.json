@@ -258,10 +258,10 @@
     {
       "scope": ["invalid", "invalid.illegal"],
       "settings": {
-        "foreground": "#FFFFFF",
-        "background": "#93000A"
+        "foreground": "#FF7B72",
+        "fontStyle": "underline"
       },
-      "name": "Blueprint Carbon rule 7"
+      "name": "Invalid syntax"
     }
   ],
   "semanticTokenColors": {
