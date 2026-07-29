@@ -7,10 +7,12 @@ A calming family of color themes for Visual Studio Code.
 ### Mindful Curiosity
 
 A warm dark theme built around soft charcoal surfaces, muted terracotta accents, and calming teal details.
+![Mindful Curiosity](images/previews/curiosity.png)
 
 ### Mindful Insight
 
 A gentle light theme with warm paper surfaces, grounded brown text, and restrained therapeutic accents.
+![Mindful Insight](images/previews/insight.png)
 
 ## Installation
 

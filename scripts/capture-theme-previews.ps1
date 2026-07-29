@@ -6,7 +6,7 @@ param(
     [ValidateScript({ Test-Path $_ -PathType Container })]
     [string]$Workspace = (Get-Location).Path,
 
-    [string]$OutputDir = (Join-Path (Get-Location).Path "screenshots"),
+    [string]$OutputDir = (Join-Path (Get-Location).Path "extensions"),
 
     [ValidateRange(1, 1000000)]
     [int]$PreviewLine = 1,
@@ -137,12 +137,34 @@ function Wait-WindowTitle {
 }
 
 $themes = @(
-    [pscustomobject]@{ Name = "Blueprint Carbon"; File = "blueprint-carbon.png" },
-    [pscustomobject]@{ Name = "Blueprint Graphite"; File = "blueprint-graphite.png" },
-    [pscustomobject]@{ Name = "Blueprint Paper"; File = "blueprint-paper.png" },
-    [pscustomobject]@{ Name = "Mindful Curiosity"; File = "mindful-curiosity.png" },
-    [pscustomobject]@{ Name = "Mindful Insight"; File = "mindful-insight.png" }
+    [pscustomobject]@{
+        Name        = "Blueprint Carbon"
+        Family      = "blueprint"
+        OutputPath  = "images/previews/carbon.png"
+    },
+    [pscustomobject]@{
+        Name        = "Blueprint Graphite"
+        Family      = "blueprint"
+        OutputPath  = "images/previews/graphite.png"
+    },
+    [pscustomobject]@{
+        Name        = "Blueprint Paper"
+        Family      = "blueprint"
+        OutputPath  = "images/previews/paper.png"
+    },
+    [pscustomobject]@{
+        Name        = "Mindful Curiosity"
+        Family      = "mindful"
+        OutputPath  = "images/previews/curiosity.png"
+    },
+    [pscustomobject]@{
+        Name        = "Mindful Insight"
+        Family      = "mindful"
+        OutputPath  = "images/previews/insight.png"
+    }
 )
+
+
 
 $codeCommand = Get-Command "code" -ErrorAction Stop
 $codeExecutable = $codeCommand.Source
@@ -168,7 +190,16 @@ $PreviewFile = (Resolve-Path $PreviewFile).Path
 $Workspace = (Resolve-Path $Workspace).Path
 $OutputDir = [System.IO.Path]::GetFullPath($OutputDir)
 
-New-Item -ItemType Directory -Force -Path $OutputDir | Out-Null
+# Accept either the repository root or the extensions folder.
+if (Test-Path (Join-Path $OutputDir "blueprint") -PathType Container) {
+    $extensionsRoot = $OutputDir
+}
+elseif (Test-Path (Join-Path $OutputDir "extensions") -PathType Container) {
+    $extensionsRoot = Join-Path $OutputDir "extensions"
+}
+else {
+    throw "Could not locate the extensions root from OutputDir: $OutputDir"
+}
 
 $dataDir = Join-Path $env:TEMP "xiomesh-vscode-theme-capture"
 if (Test-Path $dataDir) {
@@ -332,7 +363,15 @@ foreach ($theme in $themes) {
         throw "CaptureGraphicsWin2D did not create a PNG for '$($theme.Name)'."
     }
 
-    $destination = Join-Path $OutputDir $theme.File
+    $familyRoot = Join-Path $extensionsRoot $theme.Family
+    if (-not (Test-Path $familyRoot -PathType Container)) {
+        throw "Extension folder not found for family '$($theme.Family)': $familyRoot"
+    }
+
+    $destination = Join-Path $familyRoot $theme.OutputPath
+    $destinationDir = Split-Path $destination -Parent
+    New-Item -ItemType Directory -Force -Path $destinationDir | Out-Null
+
     Copy-Item $captured.FullName $destination -Force
 
     Write-Host "  Saved $destination" -ForegroundColor Green
@@ -361,5 +400,5 @@ foreach ($theme in $themes) {
 }
 
 Write-Host ""
-Write-Host "Finished. Screenshots are in: $OutputDir" `
+Write-Host "Finished. Theme previews were written under: $extensionsRoot" `
     -ForegroundColor Green

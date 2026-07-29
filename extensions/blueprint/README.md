@@ -7,14 +7,17 @@ A precise family of color themes for Visual Studio Code.
 ### Blueprint Carbon
 
 A restrained dark theme built around carbon-black surfaces, titanium-gray structure, and deliberate blue accents.
+![Blueprint Carbon](images/previews/carbon.png)
 
 ### Blueprint Graphite
 
 A softer dark theme with graphite surfaces, balanced contrast, and restrained blue accents.
+![Blueprint Graphite](images/previews/graphite.png)
 
 ### Blueprint Paper
 
 A crisp light theme built around paper-white surfaces, carbon text, titanium-gray structure, and restrained blue accents.
+![Blueprint Paper](images/previews/paper.png)
 
 ## Installation
 

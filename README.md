@@ -11,16 +11,19 @@ A precise, modern theme family built around restrained color, clear hierarchy, a
 #### Blueprint Carbon
 
 A dark theme featuring carbon-black surfaces, titanium-gray structure, and deliberate blue accents.
+![Blueprint Carbon](extensions/blueprint/images/previews/carbon.png)
 
 #### Blueprint Graphite
 
 A soft-dark theme featuring graphite surfaces, balanced contrast, and restrained blue accents.
+![Blueprint Graphite](extensions/blueprint/images/previews/graphite.png)
 
 #### Blueprint Paper
 
 A light theme featuring paper-white surfaces, carbon text, titanium-gray structure, and restrained blue accents.
+![Blueprint Paper](extensions/blueprint/images/previews/paper.png)
 
-[View Blueprint Themes](extensions/blueprint)
+[\[View Blueprint Themes ►\]](extensions/blueprint)
 
 ### Mindful Themes
 
@@ -29,12 +32,14 @@ A calming theme family built around warm surfaces, gentle contrast, and emotiona
 #### Mindful Curiosity
 
 A warm dark theme featuring soft charcoal surfaces, muted terracotta accents, and calming teal details.
+![Mindful Curiosity](extensions/mindful/images/previews/curiosity.png)
 
 #### Mindful Insight
 
 A gentle light theme featuring warm paper surfaces, grounded brown text, and restrained therapeutic accents.
+![Mindful Insight](extensions/mindful/images/previews/insight.png)
 
-[View Mindful Themes](extensions/mindful)
+[\[View Mindful Themes ►\]](extensions/mindful)
 
 ## Theme features
 
@@ -50,23 +55,13 @@ Each theme includes:
 
 ### Blueprint Carbon
 
-![Blueprint Carbon](screenshots/blueprint-carbon.png)
-
 ### Blueprint Graphite
-
-![Blueprint Graphite](screenshots/blueprint-graphite.png)
 
 ### Blueprint Paper
 
-![Blueprint Paper](screenshots/blueprint-paper.png)
-
 ### Mindful Curiosity
 
-![Mindful Curiosity](screenshots/mindful-curiosity.png)
-
 ### Mindful Insight
-
-![Mindful Insight](screenshots/mindful-insight.png)
 
 ## Installation
 
