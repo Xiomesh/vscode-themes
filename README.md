@@ -51,18 +51,6 @@ Each theme includes:
 - Custom terminal colors
 - Git status colors
 
-## Theme previews
-
-### Blueprint Carbon
-
-### Blueprint Graphite
-
-### Blueprint Paper
-
-### Mindful Curiosity
-
-### Mindful Insight
-
 ## Installation
 
 1. Download the desired `.vsix` file from the repository’s Releases page.
