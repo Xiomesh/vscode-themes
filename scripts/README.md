@@ -16,4 +16,4 @@ powershell -ExecutionPolicy Bypass -File .\scripts\capture-theme-previews.ps1 `
   -Workspace "C:\path\to\vscode-themes"
 ```
 
-Screenshots are saved to `screenshots/`.
+Previews are saved to each extension’s `images/previews/` directory.
