@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.3.0] - 2026-07-29
+
+### Added
+
+- Blueprint Graphite, a soft-dark theme between Blueprint Carbon and Blueprint Paper.
+
+### Changed
+
+- Blueprint Themes now includes dark, soft-dark, and light variants.
+
 ## [0.2.0] - 2026-07-29
 
 ### Added

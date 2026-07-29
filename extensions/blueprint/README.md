@@ -8,6 +8,10 @@ A precise family of color themes for Visual Studio Code.
 
 A restrained dark theme built around carbon-black surfaces, titanium-gray structure, and deliberate blue accents.
 
+### Blueprint Graphite
+
+A softer dark theme with graphite surfaces, balanced contrast, and restrained blue accents.
+
 ### Blueprint Paper
 
 A crisp light theme built around paper-white surfaces, carbon text, titanium-gray structure, and restrained blue accents.
@@ -25,7 +29,7 @@ A crisp light theme built around paper-white surfaces, carbon text, titanium-gra
 You can also install it from the command line:
 
 ```sh
-code --install-extension blueprint-0.2.0.vsix
+code --install-extension blueprint-0.3.0.vsix
 ```
 
 ## Selecting the theme
@@ -37,10 +41,6 @@ Preferences: Color Theme
 ```
 
 Then select the Blueprint theme you'd like to apply.
-
-## Future themes
-
-Blueprint Paper, a light counterpart to Blueprint Carbon, is planned for a future release.
 
 ## License
 

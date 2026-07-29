@@ -2,7 +2,7 @@
   "name": "blueprint",
   "displayName": "Blueprint Themes",
   "description": "Thoughtfully crafted VS Code themes for modern developers.",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "publisher": "Xiomesh",
   "license": "MIT",
   "icon": "images/icon.png",
@@ -38,6 +38,11 @@
         "label": "Blueprint Carbon",
         "uiTheme": "vs-dark",
         "path": "./themes/carbon-color-theme.json"
+      },
+      {
+        "label": "Blueprint Graphite",
+        "uiTheme": "vs-dark",
+        "path": "./themes/graphite-color-theme.json"
       },
       {
         "label": "Blueprint Paper",

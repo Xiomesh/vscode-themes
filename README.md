@@ -8,19 +8,27 @@ A collection of custom Visual Studio Code themes by Xiomesh.
 
 A precise, modern theme family built around restrained color, clear hierarchy, and comfortable contrast.
 
+#### Blueprint Graphite
+
+A soft-dark theme featuring graphite surfaces, balanced contrast, and restrained blue accents.
+
 #### Blueprint Carbon
 
-A dark theme featuring:
+A dark theme featuring carbon-black surfaces, titanium-gray structure, and deliberate blue accents.
 
-- Carbon-black editor surfaces
-- Titanium-gray structure
-- Deliberate blue accents
+#### Blueprint Paper
+
+A light theme featuring paper-white surfaces, carbon text, titanium-gray structure, and restrained blue accents.
+
+Both themes include:
+
+- Workbench and editor colors
 - TextMate syntax highlighting
 - Semantic-token highlighting
 - Custom terminal colors
 - Git status colors
 
-[Download Blueprint Themes 0.1.0](/xiomesh/vscode-themes/releases/tag/blueprint-v0.1.0)
+[Download the latest Blueprint release](/xiomesh/vscode-themes/releases)
 
 ## Installation
 
@@ -30,7 +38,7 @@ A dark theme featuring:
 4. Run **Extensions: Install from VSIX...**
 5. Select the downloaded file.
 6. Run **Preferences: Color Theme**.
-7. Select **Blueprint Carbon**.
+7. Select the theme you'd like to apply.
 
 ## License
 
