@@ -1,0 +1,8 @@
+.vscode/**
+.vscode/launch.json
+.git/**
+.github/**
+node_modules/**
+DESIGN.md
+*.code-workspace
+*.vsix

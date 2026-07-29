@@ -8,19 +8,37 @@ A collection of custom Visual Studio Code themes by Xiomesh.
 
 A precise, modern theme family built around restrained color, clear hierarchy, and comfortable contrast.
 
-#### Blueprint Graphite
-
-A soft-dark theme featuring graphite surfaces, balanced contrast, and restrained blue accents.
-
 #### Blueprint Carbon
 
 A dark theme featuring carbon-black surfaces, titanium-gray structure, and deliberate blue accents.
+
+#### Blueprint Graphite
+
+A soft-dark theme featuring graphite surfaces, balanced contrast, and restrained blue accents.
 
 #### Blueprint Paper
 
 A light theme featuring paper-white surfaces, carbon text, titanium-gray structure, and restrained blue accents.
 
-Both themes include:
+[View Blueprint Themes](extensions/blueprint)
+
+### Mindful Themes
+
+A calming theme family built around warm surfaces, gentle contrast, and emotionally comfortable color.
+
+#### Mindful Curiosity
+
+A warm dark theme featuring soft charcoal surfaces, muted terracotta accents, and calming teal details.
+
+#### Mindful Insight
+
+A gentle light theme featuring warm paper surfaces, grounded brown text, and restrained therapeutic accents.
+
+[View Mindful Themes](extensions/mindful)
+
+## Theme features
+
+Each theme includes:
 
 - Workbench and editor colors
 - TextMate syntax highlighting
@@ -28,11 +46,9 @@ Both themes include:
 - Custom terminal colors
 - Git status colors
 
-[Download the latest Blueprint release](/xiomesh/vscode-themes/releases)
-
 ## Installation
 
-1. Download the `.vsix` file from the release page.
+1. Download the desired `.vsix` file from the repository’s Releases page.
 2. Open Visual Studio Code.
 3. Open the Command Palette.
 4. Run **Extensions: Install from VSIX...**

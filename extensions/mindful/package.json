@@ -1,0 +1,50 @@
+{
+  "name": "mindful",
+  "displayName": "Mindful Themes",
+  "description": "Calming VS Code themes designed for comfort, focus, and emotional ease.",
+  "version": "0.1.0",
+  "publisher": "Xiomesh",
+  "license": "MIT",
+  "icon": "images/icon.png",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Themes"
+  ],
+  "keywords": [
+    "theme",
+    "color theme",
+    "dark theme",
+    "light theme",
+    "mindful",
+    "curiosity",
+    "insight",
+    "calming",
+    "warm",
+    "accessible"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xiomesh/vscode-themes.git",
+    "directory": "extensions/mindful"
+  },
+  "bugs": {
+    "url": "https://github.com/xiomesh/vscode-themes/issues"
+  },
+  "homepage": "https://github.com/xiomesh/vscode-themes/tree/main/extensions/mindful#readme",
+  "contributes": {
+    "themes": [
+      {
+        "label": "Mindful Curiosity",
+        "uiTheme": "vs-dark",
+        "path": "./themes/curiosity-color-theme.json"
+      },
+      {
+        "label": "Mindful Insight",
+        "uiTheme": "vs",
+        "path": "./themes/insight-color-theme.json"
+      }
+    ]
+  }
+}
