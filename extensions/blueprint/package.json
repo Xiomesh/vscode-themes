@@ -4,6 +4,8 @@
   "description": "Thoughtfully crafted VS Code themes for modern developers.",
   "version": "0.1.0",
   "publisher": "xiomesh",
+  "license": "MIT",
+  "icon": "images/icon.png",
   "engines": {
     "vscode": "^1.90.0"
   },

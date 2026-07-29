@@ -1,0 +1,9 @@
+# Packaged VS Code extensions
+*.vsix
+
+# Node tooling
+node_modules/
+
+# Operating-system files
+.DS_Store
+Thumbs.db
