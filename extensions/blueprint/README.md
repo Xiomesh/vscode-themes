@@ -8,13 +8,9 @@ A precise family of color themes for Visual Studio Code.
 
 A restrained dark theme built around carbon-black surfaces, titanium-gray structure, and deliberate blue accents.
 
-Blueprint Carbon is designed to feel:
+### Blueprint Paper
 
-- Clear
-- Engineered
-- Modern
-- High-contrast without feeling neon
-- Suitable for long coding sessions
+A crisp light theme built around paper-white surfaces, carbon text, titanium-gray structure, and restrained blue accents.
 
 ## Installation
 
@@ -29,7 +25,7 @@ Blueprint Carbon is designed to feel:
 You can also install it from the command line:
 
 ```sh
-code --install-extension blueprint-0.1.0.vsix
+code --install-extension blueprint-0.2.0.vsix
 ```
 
 ## Selecting the theme
@@ -40,11 +36,7 @@ Open the Command Palette and run:
 Preferences: Color Theme
 ```
 
-Then select:
-
-```text
-Blueprint Carbon
-```
+Then select the Blueprint theme you'd like to apply.
 
 ## Future themes
 
