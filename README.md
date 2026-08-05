@@ -41,6 +41,22 @@ A gentle light theme featuring warm paper surfaces, grounded brown text, and res
 
 [\[View Mindful Themes ►\]](extensions/mindful)
 
+### Mauve Method Themes
+
+A thoughtful theme family built around mauve tones and focused contrast.
+
+#### Mauve Method Mist
+
+A light theme built around soft mauve surfaces and focused contrast.
+![Mauve Method Mist](extensions/mauve-method/images/previews/mist.png)
+
+#### Mauve Method Smoke
+
+A dark theme built around deep mauve surfaces and restrained contrast.
+![Mauve Method Smoke](extensions/mauve-method/images/previews/smoke.png)
+
+[\[View Mauve Method Themes ►\]](extensions/mauve-method)
+
 ## Theme features
 
 Each theme includes:
