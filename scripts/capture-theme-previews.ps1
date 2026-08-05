@@ -1,11 +1,4 @@
 param(
-    [string]$PreviewFile,
-
-    [ValidateScript({ Test-Path $_ -PathType Container })]
-    [string]$Workspace = (Get-Location).Path,
-
-    [string]$OutputDir = (Join-Path (Get-Location).Path "extensions"),
-
     [ValidateRange(1, 1000000)]
     [int]$PreviewLine = 1,
 
@@ -20,7 +13,11 @@ param(
 
     [string]$CaptureCommand = "CaptureGraphicsWin2D",
 
-    [switch]$DiscoverOnly
+    [switch]$DiscoverOnly,
+
+    [switch]$All,
+
+    [switch]$MissingOnly
 )
 
 $ErrorActionPreference = "Stop"
@@ -72,25 +69,236 @@ function Get-ThemeCaptureDefinitions {
     return $definitions
 }
 
-$OutputDir = [System.IO.Path]::GetFullPath($OutputDir)
+function Select-ThemeCaptureDefinitions {
+    param(
+        [Parameter(Mandatory = $true)]
+        [array]$Definitions,
 
-# Accept either the repository root or the extensions folder.
-if (Test-Path (Join-Path $OutputDir "blueprint") -PathType Container) {
-    $extensionsRoot = $OutputDir
+        [switch]$All,
+
+        [switch]$MissingOnly
+    )
+
+    if ($All -and $MissingOnly) {
+        throw "The -All and -MissingOnly options cannot be used together."
+    }
+
+    if ($All) {
+        return $Definitions
+    }
+
+    if ($MissingOnly) {
+        return @($Definitions | Where-Object { -not $_.PreviewExists })
+    }
+
+    Write-Host "Select a theme to capture:" -ForegroundColor Cyan
+    for ($index = 0; $index -lt $Definitions.Count; $index++) {
+        Write-Host "  $($index + 1). $($Definitions[$index].Name)"
+    }
+
+    $missingIndex = $Definitions.Count + 1
+    $allIndex = $Definitions.Count + 2
+    Write-Host "  $missingIndex. Missing previews"
+    Write-Host "  $allIndex. All"
+
+    do {
+        $selection = Read-Host "Enter a number"
+        $validSelection = $selection -match '^\d+$' -and
+            [int]$selection -ge 1 -and
+            [int]$selection -le $allIndex
+
+        if (-not $validSelection) {
+            Write-Warning "Enter a number from 1 to $allIndex."
+        }
+    } while (-not $validSelection)
+
+    $selectedIndex = [int]$selection - 1
+    if ($selectedIndex -eq $Definitions.Count) {
+        return @($Definitions | Where-Object { -not $_.PreviewExists })
+    }
+
+    if ($selectedIndex -eq ($Definitions.Count + 1)) {
+        return $Definitions
+    }
+
+    return @($Definitions[$selectedIndex])
 }
-elseif (Test-Path (Join-Path $OutputDir "extensions") -PathType Container) {
-    $extensionsRoot = Join-Path $OutputDir "extensions"
+
+function New-CaptureWorkspace {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$DestinationPath
+    )
+
+    $directories = @(
+        ".github/workflows",
+        ".vscode",
+        "config",
+        "docs",
+        "public",
+        "scripts",
+        "src/components",
+        "src/features",
+        "src/hooks",
+        "src/lib",
+        "src/services",
+        "src/styles",
+        "src/types",
+        "tests"
+    )
+
+    foreach ($directory in $directories) {
+        New-Item -ItemType Directory -Force -Path (Join-Path $DestinationPath $directory) |
+            Out-Null
+    }
+
+    $emptyFiles = @(
+        ".editorconfig",
+        ".gitignore",
+        ".vscode/extensions.json",
+        ".vscode/settings.json",
+        ".github/workflows/ci.yml",
+        "README.md",
+        "package.json",
+        "package-lock.json",
+        "tsconfig.json",
+        "vite.config.ts",
+        "eslint.config.js",
+        "config/env.example",
+        "docs/architecture.md",
+        "docs/contributing.md",
+        "public/favicon.svg",
+        "public/index.html",
+        "scripts/build.ts",
+        "scripts/generate-types.ts",
+        "src/app.ts",
+        "src/main.ts",
+        "src/components/Button.tsx",
+        "src/components/Card.tsx",
+        "src/components/Header.tsx",
+        "src/components/Modal.tsx",
+        "src/features/dashboard.ts",
+        "src/features/settings.ts",
+        "src/hooks/useData.ts",
+        "src/hooks/useTheme.ts",
+        "src/lib/constants.ts",
+        "src/lib/logger.ts",
+        "src/services/api.ts",
+        "src/services/auth.ts",
+        "src/styles/global.css",
+        "src/styles/tokens.css",
+        "src/types/api.ts",
+        "src/types/index.ts",
+        "tests/app.test.ts",
+        "tests/components.test.tsx",
+        "tests/setup.ts"
+    )
+
+    foreach ($file in $emptyFiles) {
+        New-Item -ItemType File -Force -Path (Join-Path $DestinationPath $file) |
+            Out-Null
+    }
+
+    $captureShowcaseFile = Join-Path $DestinationPath "src/showcase.ts"
+    $previewContent = @'
+/**
+ * A small, self-contained fixture used for theme previews.
+ * It intentionally includes common TypeScript syntax and a few quiet details
+ * that make editor colors easy to compare across themes.
+ */
+type ProjectStatus = "active" | "paused" | "archived";
+
+interface Project {
+    id: number;
+    name: string;
+    status: ProjectStatus;
+    tags: string[];
+    private: boolean;
 }
-else {
-    throw "Could not locate the extensions root from OutputDir: $OutputDir"
+
+const projects: Project[] = [
+    {
+        id: 1,
+        name: "Wake the stars",
+        status: "active",
+        tags: ["design", "focus"],
+        private: false,
+    },
+    {
+        id: 2,
+        name: "Quiet Hours",
+        status: "paused",
+        tags: ["research"],
+        private: true,
+    },
+];
+
+const describeProject = (project: Project): string => {
+    const visibility = project.private ? "private" : "public";
+    return `${project.name} (${visibility}) — ${project.tags.join(", ")}`;
+};
+
+async function loadSummary(items: Project[]): Promise<string> {
+    // Pretend this came from an API so async keywords and error handling are
+    // represented in the capture fixture.
+    const response = await Promise.resolve({ ok: true, items });
+
+    if (!response.ok) {
+        throw new Error("Unable to load project summary");
+    }
+
+    return response.items
+        .filter((project) => project.status !== "archived")
+        .map(describeProject)
+        .join("\n");
 }
+
+export async function renderShowcase(): Promise<void> {
+    const summary = await loadSummary(projects);
+    console.log("Project summary:\n" + summary);
+}
+
+void renderShowcase();
+'@
+
+    Set-Content -LiteralPath $captureShowcaseFile -Value $previewContent -Encoding UTF8
+
+    return $captureShowcaseFile
+}
+
+$extensionsRoot = Join-Path $PSScriptRoot "..\extensions"
+if (-not (Test-Path $extensionsRoot -PathType Container)) {
+    throw "Could not locate the extensions directory next to the script: $extensionsRoot"
+}
+
+$extensionsRoot = (Resolve-Path $extensionsRoot).Path
 
 $themeDefinitions = Get-ThemeCaptureDefinitions -ExtensionsRoot $extensionsRoot
+$themeDefinitions | ForEach-Object {
+    $_ | Add-Member -NotePropertyName PreviewExists `
+        -NotePropertyValue (Test-Path (
+                Join-Path (Join-Path $extensionsRoot $_.Family) $_.OutputPath
+            ) -PathType Leaf)
+}
+
+if ($MissingOnly -and $All) {
+    throw "The -All and -MissingOnly options cannot be used together."
+}
 
 if ($DiscoverOnly) {
     $themeDefinitions |
     Select-Object Name, Family, OutputPath |
     Format-Table -AutoSize
+    return
+}
+
+$themesToCapture = Select-ThemeCaptureDefinitions `
+    -Definitions $themeDefinitions `
+    -All:$All `
+    -MissingOnly:$MissingOnly
+
+if ($themesToCapture.Count -eq 0) {
+    Write-Host "All discovered themes already have previews." -ForegroundColor Green
     return
 }
 
@@ -225,9 +433,6 @@ if ([string]::IsNullOrWhiteSpace($captureExecutable)) {
     $captureExecutable = $captureCommandInfo.Name
 }
 
-$PreviewFile = (Resolve-Path $PreviewFile).Path
-$Workspace = (Resolve-Path $Workspace).Path
-
 $dataDir = Join-Path $env:TEMP "xiomesh-vscode-theme-capture"
 if (Test-Path $dataDir) {
     Remove-Item $dataDir -Recurse -Force
@@ -236,10 +441,15 @@ if (Test-Path $dataDir) {
 $settingsDir = Join-Path $dataDir "User"
 $extensionsDir = Join-Path $dataDir "extensions"
 $captureTempDir = Join-Path $dataDir "captures"
+$captureWorkspaceDir = Join-Path $dataDir "workspace"
 
 New-Item -ItemType Directory -Force -Path $settingsDir | Out-Null
 New-Item -ItemType Directory -Force -Path $extensionsDir | Out-Null
 New-Item -ItemType Directory -Force -Path $captureTempDir | Out-Null
+New-Item -ItemType Directory -Force -Path $captureWorkspaceDir | Out-Null
+
+$captureShowcaseFile = New-CaptureWorkspace `
+    -DestinationPath $captureWorkspaceDir
 
 $settingsPath = Join-Path $settingsDir "settings.json"
 
@@ -282,7 +492,7 @@ $windowY = $screen.Top + [Math]::Max(
 
 $captureWindowTitle = "Theme Preview"
 
-foreach ($theme in $themeDefinitions) {
+foreach ($theme in $themesToCapture) {
     Write-Host "Capturing $($theme.Name)..." -ForegroundColor Cyan
 
     $settings = [ordered]@{
@@ -322,14 +532,14 @@ foreach ($theme in $themeDefinitions) {
         ForEach-Object { [long]$_.MainWindowHandle }
     )
 
-    $gotoTarget = "${PreviewFile}:$PreviewLine:1"
+    $gotoTarget = "${captureShowcaseFile}:$PreviewLine:1"
 
     $arguments = @(
         "--user-data-dir", $dataDir,
         "--extensions-dir", $extensionsDir,
         "--new-window",
         "--skip-add-to-recently-opened",
-        $Workspace,
+        $captureWorkspaceDir,
         "--goto", $gotoTarget
     )
 
