@@ -1,6 +1,4 @@
 param(
-    [Parameter(Mandatory = $true)]
-    [ValidateScript({ Test-Path $_ -PathType Leaf })]
     [string]$PreviewFile,
 
     [ValidateScript({ Test-Path $_ -PathType Container })]
@@ -20,10 +18,81 @@ param(
     [ValidateRange(1, 30)]
     [int]$RenderWaitSeconds = 5,
 
-    [string]$CaptureCommand = "CaptureGraphicsWin2D"
+    [string]$CaptureCommand = "CaptureGraphicsWin2D",
+
+    [switch]$DiscoverOnly
 )
 
 $ErrorActionPreference = "Stop"
+
+function Get-ThemeCaptureDefinitions {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$ExtensionsRoot
+    )
+
+    $definitions = @()
+
+    foreach ($extensionDir in (Get-ChildItem $ExtensionsRoot -Directory | Sort-Object Name)) {
+        $manifestPath = Join-Path $extensionDir.FullName "package.json"
+
+        if (-not (Test-Path $manifestPath -PathType Leaf)) {
+            continue
+        }
+
+        $manifest = Get-Content $manifestPath -Raw | ConvertFrom-Json
+
+        foreach ($theme in @($manifest.contributes.themes)) {
+            $themePath = Join-Path $extensionDir.FullName ($theme.path -replace '^\./', '')
+
+            if (-not (Test-Path $themePath -PathType Leaf)) {
+                throw "Theme file not found for '$($theme.label)': $themePath"
+            }
+
+            $themeJson = Get-Content $themePath -Raw | ConvertFrom-Json
+            if ($themeJson.name -ne $theme.label) {
+                throw "Theme name mismatch in '$themePath': manifest label '$($theme.label)' does not match JSON name '$($themeJson.name)'."
+            }
+
+            $previewName = [System.IO.Path]::GetFileNameWithoutExtension($themePath) -replace '-color-theme$', ''
+
+            $definitions += [pscustomobject]@{
+                Name       = $theme.label
+                Family     = $extensionDir.Name
+                SourceDir  = $extensionDir.FullName
+                OutputPath = "images/previews/$previewName.png"
+            }
+        }
+    }
+
+    if ($definitions.Count -eq 0) {
+        throw "No registered themes were found under: $ExtensionsRoot"
+    }
+
+    return $definitions
+}
+
+$OutputDir = [System.IO.Path]::GetFullPath($OutputDir)
+
+# Accept either the repository root or the extensions folder.
+if (Test-Path (Join-Path $OutputDir "blueprint") -PathType Container) {
+    $extensionsRoot = $OutputDir
+}
+elseif (Test-Path (Join-Path $OutputDir "extensions") -PathType Container) {
+    $extensionsRoot = Join-Path $OutputDir "extensions"
+}
+else {
+    throw "Could not locate the extensions root from OutputDir: $OutputDir"
+}
+
+$themeDefinitions = Get-ThemeCaptureDefinitions -ExtensionsRoot $extensionsRoot
+
+if ($DiscoverOnly) {
+    $themeDefinitions |
+    Select-Object Name, Family, OutputPath |
+    Format-Table -AutoSize
+    return
+}
 
 Add-Type -AssemblyName System.Windows.Forms
 
@@ -136,36 +205,6 @@ function Wait-WindowTitle {
     throw "VS Code did not adopt the capture title '$ExpectedTitle'. Current title: '$lastTitle'"
 }
 
-$themes = @(
-    [pscustomobject]@{
-        Name        = "Blueprint Carbon"
-        Family      = "blueprint"
-        OutputPath  = "images/previews/carbon.png"
-    },
-    [pscustomobject]@{
-        Name        = "Blueprint Graphite"
-        Family      = "blueprint"
-        OutputPath  = "images/previews/graphite.png"
-    },
-    [pscustomobject]@{
-        Name        = "Blueprint Paper"
-        Family      = "blueprint"
-        OutputPath  = "images/previews/paper.png"
-    },
-    [pscustomobject]@{
-        Name        = "Mindful Curiosity"
-        Family      = "mindful"
-        OutputPath  = "images/previews/curiosity.png"
-    },
-    [pscustomobject]@{
-        Name        = "Mindful Insight"
-        Family      = "mindful"
-        OutputPath  = "images/previews/insight.png"
-    }
-)
-
-
-
 $codeCommand = Get-Command "code" -ErrorAction Stop
 $codeExecutable = $codeCommand.Source
 
@@ -188,18 +227,6 @@ if ([string]::IsNullOrWhiteSpace($captureExecutable)) {
 
 $PreviewFile = (Resolve-Path $PreviewFile).Path
 $Workspace = (Resolve-Path $Workspace).Path
-$OutputDir = [System.IO.Path]::GetFullPath($OutputDir)
-
-# Accept either the repository root or the extensions folder.
-if (Test-Path (Join-Path $OutputDir "blueprint") -PathType Container) {
-    $extensionsRoot = $OutputDir
-}
-elseif (Test-Path (Join-Path $OutputDir "extensions") -PathType Container) {
-    $extensionsRoot = Join-Path $OutputDir "extensions"
-}
-else {
-    throw "Could not locate the extensions root from OutputDir: $OutputDir"
-}
 
 $dataDir = Join-Path $env:TEMP "xiomesh-vscode-theme-capture"
 if (Test-Path $dataDir) {
@@ -216,11 +243,9 @@ New-Item -ItemType Directory -Force -Path $captureTempDir | Out-Null
 
 $settingsPath = Join-Path $settingsDir "settings.json"
 
-# Load the theme extensions directly from this repository.
-$extensionSources = @(
-    (Join-Path $Workspace "extensions\blueprint"),
-    (Join-Path $Workspace "extensions\mindful")
-)
+# Load all theme extensions directly from this repository.
+$extensionSources = $themeDefinitions |
+    Select-Object -ExpandProperty SourceDir -Unique
 
 foreach ($sourceDir in $extensionSources) {
     $manifestPath = Join-Path $sourceDir "package.json"
@@ -257,7 +282,7 @@ $windowY = $screen.Top + [Math]::Max(
 
 $captureWindowTitle = "Theme Preview"
 
-foreach ($theme in $themes) {
+foreach ($theme in $themeDefinitions) {
     Write-Host "Capturing $($theme.Name)..." -ForegroundColor Cyan
 
     $settings = [ordered]@{
