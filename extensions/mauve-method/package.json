@@ -1,0 +1,47 @@
+{
+  "name": "mauve-method",
+  "displayName": "Mauve Method",
+  "description": "A thoughtful pair of VS Code themes designed around mauve tones and focused contrast.",
+  "version": "0.1.0",
+  "publisher": "Xiomesh",
+  "license": "MIT",
+  "icon": "images/icon.png",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Themes"
+  ],
+  "keywords": [
+    "theme",
+    "color theme",
+    "dark theme",
+    "light theme",
+    "mauve",
+    "mist",
+    "smoke"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xiomesh/vscode-themes.git",
+    "directory": "extensions/mauve-method"
+  },
+  "bugs": {
+    "url": "https://github.com/xiomesh/vscode-themes/issues"
+  },
+  "homepage": "https://github.com/xiomesh/vscode-themes/tree/main/extensions/mauve-method#readme",
+  "contributes": {
+    "themes": [
+      {
+        "label": "Mauve Method Mist",
+        "uiTheme": "vs",
+        "path": "./themes/mist-color-theme.json"
+      },
+      {
+        "label": "Mauve Method Smoke",
+        "uiTheme": "vs-dark",
+        "path": "./themes/smoke-color-theme.json"
+      }
+    ]
+  }
+}
